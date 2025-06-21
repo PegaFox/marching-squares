@@ -4,4 +4,4 @@ project(marching-squares)
 
 add_library(marching_squares marching_squares.cpp)
 
-target_include_directories(marching_squares ${CMAKE_SOURCE_DIRECTORY}/glm)
+target_include_directories(marching_squares PRIVATE ${CMAKE_SOURCE_DIRECTORY}/glm)
