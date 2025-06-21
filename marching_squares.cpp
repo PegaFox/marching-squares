@@ -1,4 +1,5 @@
 #include "marching_squares.hpp"
+#include <iostream>
 
 namespace pfsq
 {
@@ -45,11 +46,12 @@ namespace pfsq
             }
             assert(startInd != 255);
 
-            polygons.emplace_back(3);
+            polygons.emplace_back(4);
 
             polygons.back()[0] = coords[startInd];
             polygons.back()[1] = biasedPos(coords[startInd], coords[(startInd+1) & 3], vals[startInd], vals[(startInd+1) & 3]);
-            polygons.back()[2] = biasedPos(coords[startInd], coords[(startInd-1) & 3], vals[startInd], vals[(startInd-1) & 3]);
+            polygons.back()[2] = biasedPos(coords[startInd], coords[(startInd+2) & 3], vals[startInd], vals[(startInd+2) & 3] * 3.0f);
+            polygons.back()[3] = biasedPos(coords[startInd], coords[(startInd-1) & 3], vals[startInd], vals[(startInd-1) & 3]);
 
             break;
           } case 2: {
@@ -73,38 +75,15 @@ namespace pfsq
 
             if (diagonal)
             {
-              glm::vec2 centerCoord = (coords[0]+coords[1]+coords[2]+coords[3]) / 4.0f;
-              float centerVal = (vals[0]+vals[1]+vals[2]+vals[3]) / 4.0f;
+              polygons.emplace_back(6);
 
-              if (centerVal > THRESHOLD)
-              {
-                polygons.emplace_back(8);
+              polygons.back()[0] = coords[startInd];
+              polygons.back()[1] = biasedPos(coords[startInd], coords[(startInd+1) & 3], vals[startInd], vals[(startInd+1) & 3]);
+              polygons.back()[2] = biasedPos(coords[(startInd+1) & 3], coords[(startInd+2) & 3], vals[(startInd+1) & 3], vals[(startInd+2) & 3]);
 
-                polygons.back()[0] = coords[startInd];
-                polygons.back()[1] = biasedPos(coords[startInd], coords[(startInd+1) & 3], vals[startInd], vals[(startInd+1) & 3]);
-                polygons.back()[2] = biasedPos(coords[(startInd+1) & 3], centerCoord, vals[(startInd+1) & 3], centerVal);
-                polygons.back()[3] = biasedPos(coords[(startInd+1) & 3], coords[(startInd+2) & 3], vals[(startInd+1) & 3], vals[(startInd+2) & 3]);
-
-                polygons.back()[4] = coords[(startInd+2) & 3];
-                polygons.back()[5] = biasedPos(coords[(startInd-1) & 3], coords[(startInd+2) & 3], vals[(startInd-1) & 3], vals[(startInd+2) & 3]);
-                polygons.back()[6] = biasedPos(coords[(startInd-1) & 3], centerCoord, vals[(startInd-1) & 3], centerVal);
-                polygons.back()[7] = biasedPos(coords[startInd], coords[(startInd-1) & 3], vals[startInd], vals[(startInd-1) & 3]);
-              } else
-              {
-                polygons.emplace_back(4);
-
-                polygons.back()[0] = coords[startInd];
-                polygons.back()[1] = biasedPos(coords[startInd], coords[(startInd+1) & 3], vals[startInd], vals[(startInd+1) & 3]);
-                polygons.back()[2] = biasedPos(coords[startInd], centerCoord, vals[startInd], centerVal);
-                polygons.back()[3] = biasedPos(coords[startInd], coords[(startInd-1) & 3], vals[startInd], vals[(startInd-1) & 3]);
-
-                polygons.emplace_back(4);
-
-                polygons.back()[0] = coords[(startInd+2) & 3];
-                polygons.back()[1] = biasedPos(coords[(startInd+2) & 3], coords[(startInd-1) & 3], vals[(startInd+2) & 3], vals[(startInd-1) & 3]);
-                polygons.back()[2] = biasedPos(coords[(startInd+2) & 3], centerCoord, vals[(startInd+2) & 3], centerVal);
-                polygons.back()[3] = biasedPos(coords[(startInd+1) & 3], coords[(startInd+2) & 3], vals[(startInd+1) & 3], vals[(startInd+2) & 3]);
-              }
+              polygons.back()[3] = coords[(startInd+2) & 3];
+              polygons.back()[4] = biasedPos(coords[(startInd-1) & 3], coords[(startInd+2) & 3], vals[(startInd-1) & 3], vals[(startInd+2) & 3]);
+              polygons.back()[5] = biasedPos(coords[startInd], coords[(startInd-1) & 3], vals[startInd], vals[(startInd-1) & 3]);
             } else
             {
               polygons.emplace_back(4);
