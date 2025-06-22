@@ -6,7 +6,7 @@
 
 namespace pfsq
 {
-  typedef float (*GetAt)(glm::ivec2 pos);
+  typedef float (*GetAt)(glm::vec2 pos);
 
   std::vector<std::vector<glm::vec2>> generateRegion(glm::ivec2 pos, glm::ivec2 size, GetAt getAt);
 }
